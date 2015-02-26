@@ -31,12 +31,11 @@ gen1 deBruijnSeq workingArray alphabet subSeqLen t period =
   then do
     deBruijnSeq' <- readSTRef deBruijnSeq
     workingArray' <- getElems workingArray
-    writeSTRef deBruijnSeq (deBruijnSeq' ++ workingArray')
+    writeSTRef deBruijnSeq (deBruijnSeq' ++ (reverse $ take period $ reverse workingArray'))
   else do
-    valueAtTPlusPeriod <- readArray workingArray (t + period)
-    writeArray workingArray t valueAtTPlusPeriod
-    gen1 deBruijnSeq workingArray alphabet subSeqLen (t + 1) period
     valueAtTMinusPeriod <- readArray workingArray (t - period)
+    writeArray workingArray t valueAtTMinusPeriod
+    gen1 deBruijnSeq workingArray alphabet subSeqLen (t + 1) period
     forM_ [(succ valueAtTMinusPeriod)..(maximum alphabet)] (\j -> do
       writeArray workingArray t j
       gen1 deBruijnSeq workingArray alphabet subSeqLen (t + 1) t)
@@ -53,10 +52,10 @@ calculateDeBruijnSeq :: [Int] -> Int -> [Int]
 calculateDeBruijnSeq []       _         = []
 calculateDeBruijnSeq alphabet subSeqLen = runST $ do
   deBruijnSeq <- (newSTRef [])
-  toope <- (newArray (0, (length alphabet) + 1) (head alphabet))
-  gen1 deBruijnSeq toope alphabet subSeqLen 1 1
+  workingArray <- newArray (0, subSeqLen) 0
+  gen1 deBruijnSeq workingArray alphabet subSeqLen 1 1
   result <- readSTRef deBruijnSeq
-  return result
+  return $ result ++ take (subSeqLen - 1) result
 
 -- deBruijnSeq alphabet subSeqLen = runST $ join $ calculateDeBruijnSeq alphabet subSeqLen
 
