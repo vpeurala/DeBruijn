@@ -27,11 +27,15 @@ mutateArray input = do
 
 gen1 :: (Ord e, Enum e) => STRef s [e] -> STArray s Int e -> [e] -> Int -> Int -> Int -> ST s ()
 gen1 deBruijnSeq workingArray alphabet subSeqLen t period =
-  if t > subSeqLen && subSeqLen `mod` period == 0
-  then do
-    deBruijnSeq' <- readSTRef deBruijnSeq
-    workingArray' <- getElems workingArray
-    writeSTRef deBruijnSeq (deBruijnSeq' ++ (reverse $ take period $ reverse workingArray'))
+  if t > subSeqLen
+  then
+    if (subSeqLen `mod` period == 0)
+    then do
+      deBruijnSeq' <- readSTRef deBruijnSeq
+      workingArray' <- getElems workingArray
+      writeSTRef deBruijnSeq (deBruijnSeq' ++ (reverse $ take period $ reverse workingArray'))
+    else do
+      return ()
   else do
     valueAtTMinusPeriod <- readArray workingArray (t - period)
     writeArray workingArray t valueAtTMinusPeriod
