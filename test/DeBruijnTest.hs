@@ -1,5 +1,5 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-module DeBruijnTest where
+module Main where
 
 import Data.List
 
