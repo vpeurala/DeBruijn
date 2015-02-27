@@ -1,3 +1,3 @@
 #!/bin/sh
-cabal configure && cabal build && cabal install
+cabal clean && cabal configure && cabal build && cabal install
 

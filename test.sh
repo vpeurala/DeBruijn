@@ -1,3 +1,3 @@
 #!/bin/sh
-cabal configure --enable-tests && cabal build && cabal test
+cabal clean && cabal configure --enable-tests --enable-coverage && cabal build && cabal test
 
