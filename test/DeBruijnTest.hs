@@ -29,7 +29,7 @@ tests =
   ]
 
 alphabet10        = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-deBruijnOf4From10  = calculateDeBruijnSeq alphabet10 4
+deBruijnOf4From10 = calculateDeBruijnSeq alphabet10 4
 pickingsOf4From10 = pickings 4 alphabet10
 
 prop_containsEveryNLengthString :: SubSeqOf4FromAlphabet10 -> Bool
@@ -37,14 +37,14 @@ prop_containsEveryNLengthString (SubSeqOf4FromAlphabet10 subSeq) =
   occurrences subSeq deBruijnOf4From10 == 1
 
 test_containsEveryNLengthString =
-  let picksWithOccurrencesOtherThan1 = filter (\c -> occurrences c deBruijnOf4From10 /= 1) pickingsOf4From10
+  let picksWithOccurrencesOtherThan1 = filter (\c -> occurrences c deBruijnOf4From10 /= 1) [[9, 0, 0, 0], [9, 9, 0, 0], [9, 9, 9, 0]]
       errors                         = map (\c -> "Pick " ++ show c ++ " should have occurred exactly once in sequence " ++ show deBruijnOf4From10 ++ ", but occurred " ++ show (occurrences c deBruijnOf4From10) ++ " times.") picksWithOccurrencesOtherThan1
   in  [] @=? errors
 
 combinations :: Int -> [a] -> [[a]]
 combinations _ [] = []
 combinations 0 _ = [[]]
-combinations 1 xs = map (\x -> [x]) xs
+combinations 1 xs = map (:[]) xs
 combinations n (x:xs) =
   map (x:) (combinations (n - 1) xs)
   ++
@@ -53,9 +53,9 @@ combinations n (x:xs) =
 pickings :: Int -> [a] -> [[a]]
 pickings _ [] = []
 pickings 0 _  = [[]]
-pickings 1 xs = map (\x -> [x]) xs
+pickings 1 xs = map (:[]) xs
 pickings n xs =
-  concatMap (\p -> map (\x -> (x:p)) xs) (pickings (n - 1) xs)
+  concatMap (\x -> map (\p -> (x:p)) (pickings (n - 1) xs)) xs
 
 occurrences :: (Eq a) => [a] -> [a] -> Int
 occurrences needle [] = 0
@@ -63,8 +63,6 @@ occurrences needle haystack =
   if (take (length needle) haystack) == needle
   then 1 + (occurrences needle (tail haystack))
   else occurrences needle (tail haystack)
-
-newtype Alphabet a = Alphabet [a] deriving (Eq, Ord, Read, Show)
 
 newtype SubSeqLen = SubSeqLen Int deriving (Enum, Eq, Integral, Num, Ord, Read, Real, Show)
 
