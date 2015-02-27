@@ -3,7 +3,7 @@ module DeBruijnTest where
 
 import Data.List
 
-import Test.HUnit
+import Test.HUnit hiding (Test)
 
 import Test.QuickCheck.Arbitrary
 import Test.QuickCheck.Gen
@@ -18,7 +18,7 @@ import DeBruijn
 main :: IO ()
 main = defaultMain tests
 
-tests :: [Test.Framework.Test]
+tests :: [Test]
 tests =
   [
     testGroup "A De Bruijn sequence"
