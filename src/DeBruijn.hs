@@ -1,4 +1,4 @@
-module DeBruijn where
+module DeBruijn (deBruijnSequence, deBruijnString) where
 
 import Control.Monad
 import Control.Monad.ST
@@ -30,23 +30,20 @@ gen1 deBruijnSeq workingArray alphabet subSeqLen t period =
     valueAtTMinusPeriod <- readArray workingArray (t - period)
     writeArray workingArray t valueAtTMinusPeriod
     gen1 deBruijnSeq workingArray alphabet subSeqLen (t + 1) period
-    forM_ [(succ valueAtTMinusPeriod)..(maximum alphabet)] (\j -> do
+    forM_ (successors alphabet valueAtTMinusPeriod) (\j -> do
       writeArray workingArray t j
       gen1 deBruijnSeq workingArray alphabet subSeqLen (t + 1) t)
+
+successors :: (Ord a) => [a] -> a -> [a]
+successors alphabet letter =
+  dropWhile (\l -> l <= letter) alphabet 
 
 calculateDeBruijnSeq :: (Enum a, Ord a) => [a] -> Int -> [a]
 calculateDeBruijnSeq []       _         = []
 calculateDeBruijnSeq alphabet subSeqLen = runST $ do
   deBruijnSeq <- (newSTRef [])
-  workingArray <- newArray (0, subSeqLen) (head alphabet)
+  workingArray <- newArray (0, subSeqLen) (minimum alphabet)
   gen1 deBruijnSeq workingArray alphabet subSeqLen 1 1
   result <- readSTRef deBruijnSeq
   return $ result ++ take (subSeqLen - 1) result
-
-newtype Alphabet a = Alphabet [a]
-
-data Letter a = Letter (Alphabet a) a
-
-instance Enum (Letter a) where
-  fromEnum (Letter (Alphabet xs) x) = undefined
 

@@ -24,12 +24,14 @@ tests =
     testGroup "A De Bruijn sequence"
     [
       testProperty "Contains each n-length string from alphabet exactly once" prop_containsEveryNLengthString,
-      testCase "Contains each n-length string from alphabet exactly once" test_containsEveryNLengthString
+      testCase "Contains each n-length string from alphabet exactly once" test_containsEveryNLengthString,
+      testCase "Works also with non-consecutive alphabets" test_nonConsecutiveAlphabet,
+      testCase "Is empty for an empty alphabet" test_emptyAlphabet
     ]
   ]
 
 alphabet10        = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-deBruijnOf4From10 = calculateDeBruijnSeq alphabet10 4
+deBruijnOf4From10 = deBruijnSequence alphabet10 4
 pickingsOf4From10 = pickings 4 alphabet10
 
 prop_containsEveryNLengthString :: SubSeqOf4FromAlphabet10 -> Bool
@@ -40,6 +42,16 @@ test_containsEveryNLengthString =
   let picksWithOccurrencesOtherThan1 = filter (\c -> occurrences c deBruijnOf4From10 /= 1) [[9, 0, 0, 0], [9, 9, 0, 0], [9, 9, 9, 0]]
       errors                         = map (\c -> "Pick " ++ show c ++ " should have occurred exactly once in sequence " ++ show deBruijnOf4From10 ++ ", but occurred " ++ show (occurrences c deBruijnOf4From10) ++ " times.") picksWithOccurrencesOtherThan1
   in  [] @=? errors
+
+test_nonConsecutiveAlphabet =
+  let alphabet = [1, 3, 5]
+      deBruijn = deBruijnString alphabet 2
+  in  "1131533551" @=? deBruijn
+
+test_emptyAlphabet =
+  let alphabet = [] :: [Int]
+      deBruijn = deBruijnString alphabet 2
+  in  "" @=? deBruijn
 
 combinations :: Int -> [a] -> [[a]]
 combinations _ [] = []
@@ -65,6 +77,8 @@ occurrences needle haystack =
   else occurrences needle (tail haystack)
 
 newtype SubSeqLen = SubSeqLen Int deriving (Enum, Eq, Integral, Num, Ord, Read, Real, Show)
+
+newtype Alphabet a = Alphabet [a] deriving (Eq, Ord, Read, Show)
 
 instance Functor Alphabet where
   fmap f (Alphabet xs) = Alphabet (map f xs)
