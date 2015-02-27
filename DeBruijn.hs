@@ -52,11 +52,11 @@ arrayThing deBruijnSeq alphabet subSeqLen = seq (runST $ do
   deBruijnSeq
 --}
 
-calculateDeBruijnSeq :: [Int] -> Int -> [Int]
+calculateDeBruijnSeq :: (Enum a, Ord a) => [a] -> Int -> [a]
 calculateDeBruijnSeq []       _         = []
 calculateDeBruijnSeq alphabet subSeqLen = runST $ do
   deBruijnSeq <- (newSTRef [])
-  workingArray <- newArray (0, subSeqLen) 0
+  workingArray <- newArray (0, subSeqLen) (head alphabet)
   gen1 deBruijnSeq workingArray alphabet subSeqLen 1 1
   result <- readSTRef deBruijnSeq
   return $ result ++ take (subSeqLen - 1) result
