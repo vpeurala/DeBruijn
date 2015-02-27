@@ -2,4 +2,7 @@
 dist
 cabal.sandbox.config
 *.swp
+*.hi
+*.o
+Main
 
