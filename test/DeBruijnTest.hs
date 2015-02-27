@@ -1,13 +1,10 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Main where
 
-import Data.List
-
 import Test.HUnit hiding (Test)
 
 import Test.QuickCheck.Arbitrary
 import Test.QuickCheck.Gen
-import Test.QuickCheck.Modifiers
 
 import Test.Framework
 import Test.Framework.Providers.HUnit

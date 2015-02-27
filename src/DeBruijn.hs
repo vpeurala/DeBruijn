@@ -2,7 +2,6 @@ module DeBruijn (deBruijnSequence, deBruijnString) where
 
 import Control.Monad
 import Control.Monad.ST
-import Data.Array
 import Data.Array.MArray
 import Data.Array.ST
 import Data.List (nub, sort)
@@ -23,7 +22,7 @@ gen1 deBruijnSeq workingArray alphabet subSeqLen t period =
     then do
       deBruijnSeq' <- readSTRef deBruijnSeq
       workingArray' <- getElems workingArray
-      writeSTRef deBruijnSeq (deBruijnSeq' ++ (reverse $ take period $ reverse workingArray'))
+      writeSTRef deBruijnSeq (deBruijnSeq' ++ (drop (subSeqLen - period + 1) workingArray'))
     else do
       return ()
   else do
