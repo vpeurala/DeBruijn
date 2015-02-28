@@ -1,34 +1,49 @@
-	Fri Feb 27 22:01 2015 Time and Allocation Profiling Report  (Final)
+	Sat Feb 28 16:52 2015 Time and Allocation Profiling Report  (Final)
 
-	   Main +RTS -p -RTS
+	   Main +RTS -p -sstderr -RTS
 
-	total time  =        0.27 secs   (270 ticks @ 1000 us, 1 processor)
-	total alloc = 713,714,768 bytes  (excludes profiling overheads)
+	total time  =        0.03 secs   (28 ticks @ 1000 us, 1 processor)
+	total alloc = 105,010,864 bytes  (excludes profiling overheads)
 
-COST CENTRE MODULE   %time %alloc
+COST CENTRE    MODULE   %time %alloc
 
-gen1.\      DeBruijn  99.3   99.7
+gen1.\         DeBruijn  96.4   97.5
+main           Main       3.6    0.0
+deBruijnString DeBruijn   0.0    1.2
 
 
-                                                                    individual     inherited
-COST CENTRE               MODULE                  no.     entries  %time %alloc   %time %alloc
+                                                                                            individual     inherited
+COST CENTRE                                       MODULE                  no.     entries  %time %alloc   %time %alloc
 
-MAIN                      MAIN                     50           0    0.0    0.0   100.0  100.0
- main                     Main                    101           0    0.4    0.0     0.4    0.0
- CAF:main1                Main                     98           0    0.0    0.0     0.0    0.0
-  main                    Main                    100           1    0.0    0.0     0.0    0.0
- CAF:main2                Main                     97           0    0.0    0.0    99.6  100.0
-  main                    Main                    102           0    0.0    0.0    99.6  100.0
-   deBruijnString         DeBruijn                103           1    0.4    0.2    99.6  100.0
-    deBruijnSequence      DeBruijn                104           1    0.0    0.0    99.3   99.8
-     calculateDeBruijnSeq DeBruijn                105           1    0.0    0.1    99.3   99.8
-      gen1                DeBruijn                106         522    0.0    0.0    99.3   99.7
-       successors         DeBruijn                108           4    0.0    0.0     0.0    0.0
-        successors.\      DeBruijn                109           8    0.0    0.0     0.0    0.0
-       gen1.\             DeBruijn                107        2859   99.3   99.7    99.3   99.7
-        successors        DeBruijn                110         447    0.0    0.0     0.0    0.0
-         successors.\     DeBruijn                111        2082    0.0    0.0     0.0    0.0
- CAF                      GHC.Conc.Signal          90           0    0.0    0.0     0.0    0.0
- CAF                      GHC.IO.Encoding          83           0    0.0    0.0     0.0    0.0
- CAF                      GHC.IO.Encoding.Iconv    81           0    0.0    0.0     0.0    0.0
- CAF                      GHC.IO.Handle.FD         74           0    0.0    0.0     0.0    0.0
+MAIN                                              MAIN                     76           0    0.0    0.0   100.0  100.0
+ main                                             Main                    153           0    3.6    0.0     3.6    0.0
+ CAF:main1                                        Main                    150           0    0.0    0.0     0.0    0.0
+  main                                            Main                    152           1    0.0    0.0     0.0    0.0
+ CAF:main2                                        Main                    149           0    0.0    0.0    96.4   99.9
+  main                                            Main                    154           0    0.0    0.0    96.4   99.9
+   deBruijnString                                 DeBruijn                155           1    0.0    1.2    96.4   99.9
+    deBruijnSequence                              DeBruijn                156           1    0.0    0.0    96.4   98.7
+     calculateDeBruijnSeq                         DeBruijn                157           1    0.0    0.1    96.4   98.7
+      calculateDeBruijnSeq.sequenceWithCycling    DeBruijn                175           1    0.0    0.5     0.0    0.5
+      calculateDeBruijnSeq.sequenceWithoutCycling DeBruijn                174           1    0.0    0.5     0.0    0.5
+      gen1                                        DeBruijn                160         522    0.0    0.0    96.4   97.6
+       gen1.\                                     DeBruijn                167        2859   96.4   97.5    96.4   97.5
+        successors                                DeBruijn                172         447    0.0    0.0     0.0    0.0
+         successors.\                             DeBruijn                173        2082    0.0    0.0     0.0    0.0
+        gen1.firstWritableIndex                   DeBruijn                171        2529    0.0    0.0     0.0    0.0
+        gen1.\                                    DeBruijn                170        9999    0.0    0.0     0.0    0.0
+        gen1.appendableLength                     DeBruijn                169        2529    0.0    0.0     0.0    0.0
+        gen1.appendable                           DeBruijn                168        2529    0.0    0.1     0.0    0.1
+       successors                                 DeBruijn                165           4    0.0    0.0     0.0    0.0
+        successors.\                              DeBruijn                166           8    0.0    0.0     0.0    0.0
+       gen1.firstWritableIndex                    DeBruijn                164           1    0.0    0.0     0.0    0.0
+       gen1.\                                     DeBruijn                163           1    0.0    0.0     0.0    0.0
+       gen1.appendableLength                      DeBruijn                162           1    0.0    0.0     0.0    0.0
+       gen1.appendable                            DeBruijn                161           1    0.0    0.0     0.0    0.0
+ CAF:deBruijnSequence1                            DeBruijn                148           0    0.0    0.0     0.0    0.0
+  deBruijnSequence                                DeBruijn                158           0    0.0    0.0     0.0    0.0
+   calculateDeBruijnSeq                           DeBruijn                159           0    0.0    0.0     0.0    0.0
+ CAF                                              GHC.Conc.Signal         119           0    0.0    0.0     0.0    0.0
+ CAF                                              GHC.IO.Encoding         112           0    0.0    0.0     0.0    0.0
+ CAF                                              GHC.IO.Encoding.Iconv   110           0    0.0    0.0     0.0    0.0
+ CAF                                              GHC.IO.Handle.FD        103           0    0.0    0.0     0.0    0.0
