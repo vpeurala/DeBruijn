@@ -36,8 +36,7 @@ gen1 deBruijnSeq workingArray alphabet subSeqLen t period =
         item <- VM.read appendable i
         VM.write grown (firstWritableIndex + i) item)
       writeSTRef deBruijnSeq grown
-    else do
-      return ()
+    else return ()
   else do
     valueAtTMinusPeriod <- VM.read workingArray (t - period)
     VM.write workingArray t valueAtTMinusPeriod
