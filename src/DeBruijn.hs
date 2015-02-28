@@ -1,10 +1,7 @@
 module DeBruijn (deBruijnSequence, deBruijnString) where
 
 import Control.Monad
-import Control.Monad.Primitive
 import Control.Monad.ST
-import Data.Array.MArray
-import Data.Array.ST
 import Data.List (nub, sort)
 import Data.STRef
 import qualified Data.Vector as V
