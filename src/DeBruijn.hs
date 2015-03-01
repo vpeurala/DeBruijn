@@ -1,3 +1,14 @@
+{-|
+Module        : DeBruijn
+Description   : Generates <http://en.wikipedia.org/wiki/De_Bruijn_sequence De Bruijn sequences>.
+Copyright     : (c) Ville Peurala, 2015
+License       : Apache License 2.0
+Maintainer    : ville.peurala@gmail.com
+Stability     : experimental
+Portability   : POSIX
+
+This module generates <http://en.wikipedia.org/wiki/De_Bruijn_sequence De Bruijn sequences>.
+-} 
 module DeBruijn (deBruijnSequence, deBruijnString) where
 
 import Control.Monad
@@ -7,11 +18,22 @@ import Data.STRef
 import qualified Data.Vector as V
 import qualified Data.Vector.Mutable as VM
 
-deBruijnSequence :: (Enum a, Ord a) => [a] -> Int -> [a]
+-- | Generates a <http://en.wikipedia.org/wiki/De_Bruijn_sequence De Bruijn sequence> from alphabet a with the given length of subsequences.
+deBruijnSequence :: (Enum a, Ord a) => 
+  [a]    -- ^ The alphabet from which the De Bruijn sequence will be generated.
+  -> Int -- ^ Length of the subsequences of the De Bruijn sequence.
+  -> [a] -- ^ The returned sequence as a 'List'.
 deBruijnSequence alphabet subSequenceLength = calculateDeBruijnSeq (nub $ sort alphabet) subSequenceLength
 
-deBruijnString :: (Enum a, Ord a, Show a) => [a] -> Int -> String
-deBruijnString alphabet subSequenceLength = concat $ map show $ deBruijnSequence alphabet subSequenceLength
+-- | Generates a 'String' from a <http://en.wikipedia.org/wiki/De_Bruijn_sequence De Bruijn sequence> from alphabet a with the given length of subsequences.
+deBruijnString :: (Enum a, Ord a, Show a) => 
+  [a]       -- ^ The alphabet from which the De Bruijn sequence will be generated.
+  -> Int    -- ^ Length of the subsequences of the De Bruijn sequence.
+  -> String -- ^ The returned 'String'.
+deBruijnString 
+  alphabet
+  subSequenceLength
+  = concat $ map show $ deBruijnSequence alphabet subSequenceLength
 
 -- See "An Efficient Algorithm for Generating Necklaces with Fixed Density" by Joe Sawada and Frank Ruskey
 gen1 :: (Ord a) =>
