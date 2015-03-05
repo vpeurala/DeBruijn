@@ -20,10 +20,10 @@ tests =
   [
     testGroup "A De Bruijn sequence"
     [
-      testProperty "Contains each n-length string from alphabet exactly once" prop_containsEveryNLengthString,
-      testCase "Contains each n-length string from alphabet exactly once" test_containsEveryNLengthString,
-      testCase "Works also with non-consecutive alphabets" test_nonConsecutiveAlphabet,
-      testCase "Is empty for an empty alphabet" test_emptyAlphabet
+      testProperty "Contains each n-length string from alphabet exactly once" propContainsEveryNLengthString,
+      testCase "Contains each n-length string from alphabet exactly once" testContainsEveryNLengthString,
+      testCase "Works also with non-consecutive alphabets" testNonConsecutiveAlphabet,
+      testCase "Is empty for an empty alphabet" testEmptyAlphabet
     ]
   ]
 
@@ -33,24 +33,24 @@ alphabet10        = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 deBruijnOf4From10 :: [Int]
 deBruijnOf4From10 = deBruijnSequence alphabet10 4
 
-prop_containsEveryNLengthString :: SubSeqOf4FromAlphabet10 -> Bool
-prop_containsEveryNLengthString (SubSeqOf4FromAlphabet10 subSeq) =
+propContainsEveryNLengthString :: SubSeqOf4FromAlphabet10 -> Bool
+propContainsEveryNLengthString (SubSeqOf4FromAlphabet10 subSeq) =
   occurrences subSeq deBruijnOf4From10 == 1
 
-test_containsEveryNLengthString :: Assertion
-test_containsEveryNLengthString =
+testContainsEveryNLengthString :: Assertion
+testContainsEveryNLengthString =
   let picksWithOccurrencesOtherThan1 = filter (\c -> occurrences c deBruijnOf4From10 /= 1) [[9, 0, 0, 0], [9, 9, 0, 0], [9, 9, 9, 0]]
       errors                         = map (\c -> "Pick " ++ show c ++ " should have occurred exactly once in sequence " ++ show deBruijnOf4From10 ++ ", but occurred " ++ show (occurrences c deBruijnOf4From10) ++ " times.") picksWithOccurrencesOtherThan1
   in  [] @=? errors
 
-test_nonConsecutiveAlphabet :: Assertion
-test_nonConsecutiveAlphabet =
+testNonConsecutiveAlphabet :: Assertion
+testNonConsecutiveAlphabet =
   let alphabet = [1 :: Int, 3, 5]
       deBruijn = deBruijnString alphabet 2
   in  "1131533551" @=? deBruijn
 
-test_emptyAlphabet :: Assertion
-test_emptyAlphabet =
+testEmptyAlphabet :: Assertion
+testEmptyAlphabet =
   let alphabet = [] :: [Int]
       deBruijn = deBruijnString alphabet 2
   in  "" @=? deBruijn
@@ -62,20 +62,20 @@ combinations 1 xs = map (:[]) xs
 combinations n (x:xs) =
   map (x:) (combinations (n - 1) xs)
   ++
-  (combinations n xs)
+  combinations n xs
 
 pickings :: Int -> [a] -> [[a]]
 pickings _ [] = []
 pickings 0 _  = [[]]
 pickings 1 xs = map (:[]) xs
 pickings n xs =
-  concatMap (\x -> map (\p -> (x:p)) (pickings (n - 1) xs)) xs
+  concatMap (\x -> map (\p -> x : p) (pickings (n - 1) xs)) xs
 
 occurrences :: (Eq a) => [a] -> [a] -> Int
 occurrences _ [] = 0
 occurrences needle haystack =
-  if (take (length needle) haystack) == needle
-  then 1 + (occurrences needle (tail haystack))
+  if take (length needle) haystack == needle
+  then 1 + occurrences needle (tail haystack)
   else occurrences needle (tail haystack)
 
 newtype SubSeqLen = SubSeqLen Int deriving (Enum, Eq, Integral, Num, Ord, Read, Real, Show)
@@ -94,5 +94,5 @@ instance Arbitrary SubSeqLen where
 newtype SubSeqOf4FromAlphabet10 = SubSeqOf4FromAlphabet10 [Int] deriving (Eq, Ord, Read, Show)
 
 instance Arbitrary SubSeqOf4FromAlphabet10 where
-  arbitrary = SubSeqOf4FromAlphabet10 `fmap` (vectorOf 4 (elements alphabet10))
+  arbitrary = SubSeqOf4FromAlphabet10 `fmap` vectorOf 4 (elements alphabet10)
 

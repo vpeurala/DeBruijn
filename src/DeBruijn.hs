@@ -23,7 +23,7 @@ deBruijnSequence :: (Enum a, Ord a) =>
   [a]    -- ^ The alphabet from which the De Bruijn sequence will be generated.
   -> Int -- ^ Length of the subsequences of the De Bruijn sequence.
   -> [a] -- ^ The returned sequence as a 'List'.
-deBruijnSequence alphabet subSequenceLength = calculateDeBruijnSeq (nub $ sort alphabet) subSequenceLength
+deBruijnSequence alphabet = calculateDeBruijnSeq (nub $ sort alphabet)
 
 -- | Generates a 'String' from a <http://en.wikipedia.org/wiki/De_Bruijn_sequence De Bruijn sequence> from alphabet a with the given length of subsequences.
 deBruijnString :: (Enum a, Ord a, Show a) => 
@@ -33,7 +33,7 @@ deBruijnString :: (Enum a, Ord a, Show a) =>
 deBruijnString 
   alphabet
   subSequenceLength
-  = concat $ map show $ deBruijnSequence alphabet subSequenceLength
+  = concatMap show $ deBruijnSequence alphabet subSequenceLength
 
 -- See "An Efficient Algorithm for Generating Necklaces with Fixed Density" by Joe Sawada and Frank Ruskey
 gen1 :: (Ord a) =>
@@ -47,8 +47,7 @@ gen1 :: (Ord a) =>
 gen1 deBruijnSeq workingArray alphabet subSeqLen t period =
   if t > subSeqLen
   then
-    if (subSeqLen `mod` period == 0)
-    then do
+    when (subSeqLen `mod` period == 0) $ do
       deBruijnSeq' <- readSTRef deBruijnSeq
       let appendable = VM.drop (subSeqLen - period + 1) workingArray
       let firstWritableIndex = VM.length deBruijnSeq'
@@ -58,7 +57,6 @@ gen1 deBruijnSeq workingArray alphabet subSeqLen t period =
         item <- VM.read appendable i
         VM.write grown (firstWritableIndex + i) item)
       writeSTRef deBruijnSeq grown
-    else return ()
   else do
     valueAtTMinusPeriod <- VM.read workingArray (t - period)
     VM.write workingArray t valueAtTMinusPeriod
@@ -69,7 +67,7 @@ gen1 deBruijnSeq workingArray alphabet subSeqLen t period =
 
 successors :: (Ord a) => [a] -> a -> [a]
 successors alphabet letter =
-  dropWhile (\l -> l <= letter) alphabet 
+  dropWhile (<= letter) alphabet 
 
 calculateDeBruijnSeq :: (Enum a, Ord a) => [a] -> Int -> [a]
 calculateDeBruijnSeq []       _         = []
