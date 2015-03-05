@@ -19,14 +19,14 @@ import qualified Data.Vector as V
 import qualified Data.Vector.Mutable as VM
 
 -- | Generates a <http://en.wikipedia.org/wiki/De_Bruijn_sequence De Bruijn sequence> from alphabet a with the given length of subsequences.
-deBruijnSequence :: (Enum a, Ord a) => 
+deBruijnSequence :: (Ord a) => 
   [a]    -- ^ The alphabet from which the De Bruijn sequence will be generated.
   -> Int -- ^ Length of the subsequences of the De Bruijn sequence.
   -> [a] -- ^ The returned sequence as a 'List'.
 deBruijnSequence alphabet = calculateDeBruijnSeq (nub $ sort alphabet)
 
 -- | Generates a 'String' from a <http://en.wikipedia.org/wiki/De_Bruijn_sequence De Bruijn sequence> from alphabet a with the given length of subsequences.
-deBruijnString :: (Enum a, Ord a, Show a) => 
+deBruijnString :: (Ord a, Show a) => 
   [a]       -- ^ The alphabet from which the De Bruijn sequence will be generated.
   -> Int    -- ^ Length of the subsequences of the De Bruijn sequence.
   -> String -- ^ The returned 'String'.
@@ -69,7 +69,7 @@ successors :: (Ord a) => [a] -> a -> [a]
 successors alphabet letter =
   dropWhile (<= letter) alphabet 
 
-calculateDeBruijnSeq :: (Enum a, Ord a) => [a] -> Int -> [a]
+calculateDeBruijnSeq :: (Ord a) => [a] -> Int -> [a]
 calculateDeBruijnSeq []       _         = []
 calculateDeBruijnSeq alphabet subSeqLen = runST $ do
   deBruijnSeqWorking <- V.thaw $ V.fromList []
