@@ -1,0 +1,9 @@
+test:
+  pre:
+    - cabal install codecov-haskell
+    - cabal install --enable-tests --enable-coverage
+  override:
+    - cabal test
+  post:
+    - codecov-haskell
+
