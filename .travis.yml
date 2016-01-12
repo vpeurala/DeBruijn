@@ -71,7 +71,7 @@ script:
  - cabal build   # this builds all libraries and executables (including tests/benchmarks)
  - cabal test
  - cabal install codecov-haskell
- - codecov-haskell
+ - codecov-haskell all-tests
 # - cabal check
 # - cabal sdist   # tests that a source-distribution can be generated
 
