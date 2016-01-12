@@ -57,6 +57,7 @@ executable DeBruijnExample
   main-is:             Main.hs
   other-modules:       DeBruijn
   build-depends:       base >=4.7 && <5, array >=0.5, vector >=0.10, primitive >=0.5
+  default-language:    Haskell2010
 
 test-suite all-tests
   type:                exitcode-stdio-1.0
